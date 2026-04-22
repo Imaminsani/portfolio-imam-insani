@@ -27,6 +27,24 @@ Route::get('/storage-link-imam', function () {
     }
 });
 
+Route::get('/fix-storage-imam', function () {
+    $paths = [
+        storage_path('app/public'),
+        storage_path('framework/cache'),
+        storage_path('framework/sessions'),
+        storage_path('framework/views'),
+        storage_path('logs'),
+    ];
+
+    foreach ($paths as $path) {
+        if (!file_exists($path)) {
+            mkdir($path, 0775, true);
+        }
+    }
+
+    return '<h2 style="font-family:sans-serif;padding:2rem;color:#10b981;">✅ Struktur folder storage berhasil diperbaiki!</h2>';
+});
+
 // ─── ADMIN PANEL ────────────────────────────────────────
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
