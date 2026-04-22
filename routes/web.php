@@ -45,6 +45,49 @@ Route::get('/fix-storage-imam', function () {
     return '<h2 style="font-family:sans-serif;padding:2rem;color:#10b981;">✅ Struktur folder storage berhasil diperbaiki!</h2>';
 });
 
+Route::get('/debug-storage-imam', function () {
+    $publicStorage = public_path('storage');
+    $storageAppPublic = storage_path('app/public');
+    
+    echo "<h3>--- Path Info ---</h3>";
+    echo "Public Storage Path: " . $publicStorage . "<br>";
+    echo "Storage App Public Path: " . $storageAppPublic . "<br>";
+    
+    echo "<h3>--- Checking Public Storage ---</h3>";
+    if (file_exists($publicStorage)) {
+        echo "✅ public/storage exists.<br>";
+        if (is_link($publicStorage)) {
+            echo "🔗 It is a SYMLINK.<br>";
+            echo "🎯 Pointing to: " . readlink($publicStorage) . "<br>";
+        } else {
+            echo "📁 It is a DIRECTORY (NOT a link). <span style='color:red;'>Ini MASALAH! Harus dihapus dulu lewat File Manager lalu jalankan storage-link-imam kembali.</span><br>";
+        }
+    } else {
+        echo "❌ public/storage DOES NOT EXIST.<br>";
+    }
+    
+    echo "<h3>--- Checking Storage App Public ---</h3>";
+    if (file_exists($storageAppPublic)) {
+        echo "✅ storage/app/public exists.<br>";
+        $subfolders = ['projects', 'certificates', 'activities', 'profile'];
+        foreach ($subfolders as $sub) {
+            $subPath = $storageAppPublic . '/' . $sub;
+            if (file_exists($subPath)) {
+                $files = array_diff(scandir($subPath), array('.', '..'));
+                echo "📁 $sub: " . count($files) . " files found.<br>";
+            } else {
+                echo "❌ Folder $sub NOT FOUND in storage/app/public.<br>";
+            }
+        }
+    } else {
+        echo "❌ storage/app/public DOES NOT EXIST.<br>";
+    }
+    
+    echo "<h3>--- Env Info ---</h3>";
+    echo "APP_URL: " . config('app.url') . "<br>";
+    echo "Asset URL for sample: " . asset('storage/test.jpg') . "<br>";
+});
+
 // ─── ADMIN PANEL ────────────────────────────────────────
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
