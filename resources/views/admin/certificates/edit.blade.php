@@ -64,7 +64,7 @@
         <label class="form-label">Foto Sertifikat</label>
         @if($certificate->image)
           <div style="margin-bottom:0.75rem;">
-            <img src="{{ asset('storage/'.$certificate->image) }}"
+            <img src="{{ asset('uploads/'.$certificate->image) }}"
               style="max-height:150px; border-radius:10px; border:1px solid var(--border);" alt="Current">
             <div class="form-hint" style="margin-top:0.4rem;">Foto saat ini. Upload baru untuk mengganti.</div>
           </div>

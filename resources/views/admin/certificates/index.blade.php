@@ -33,7 +33,7 @@
             <td>
               <div style="display:flex;align-items:center;gap:0.75rem;">
                 @if($cert->image)
-                  <img src="{{ asset('storage/'.$cert->image) }}" class="project-thumb" alt="{{ $cert->title }}">
+                  <img src="{{ asset('uploads/'.$cert->image) }}" class="project-thumb" alt="{{ $cert->title }}">
                 @else
                   <div class="project-thumb-placeholder">🎓</div>
                 @endif

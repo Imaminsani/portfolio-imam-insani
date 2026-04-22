@@ -39,7 +39,10 @@ class ProjectController extends Controller
         ];
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('projects', 'public');
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/projects'), $filename);
+            $data['image'] = 'projects/' . $filename;
         }
 
         Project::create($data);
@@ -78,9 +81,15 @@ class ProjectController extends Controller
         if ($request->hasFile('image')) {
             // Hapus gambar lama jika ada
             if ($project->image) {
-                Storage::disk('public')->delete($project->image);
+                $oldPath = public_path('uploads/' . $project->image);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
             }
-            $data['image'] = $request->file('image')->store('projects', 'public');
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/projects'), $filename);
+            $data['image'] = 'projects/' . $filename;
         }
 
         $project->update($data);
@@ -92,7 +101,10 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         if ($project->image) {
-            Storage::disk('public')->delete($project->image);
+            $path = public_path('uploads/' . $project->image);
+            if (file_exists($path)) {
+                unlink($path);
+            }
         }
         $project->delete();
 

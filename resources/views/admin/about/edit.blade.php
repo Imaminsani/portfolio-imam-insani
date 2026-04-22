@@ -113,7 +113,7 @@
             <label class="form-label">Preview Saat Ini:</label>
             @if($about->profile_image)
               <img id="image-preview-el"
-                src="{{ $about->profile_image == 'profile.png' ? asset('img/profile.png') : asset('storage/' . $about->profile_image) }}"
+                src="{{ $about->profile_image == 'profile.png' ? asset('img/profile.png') : asset('uploads/' . $about->profile_image) }}"
                 class="img-preview show"
                 style="max-width:180px;max-height:220px;">
             @else

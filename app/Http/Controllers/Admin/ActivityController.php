@@ -34,7 +34,10 @@ class ActivityController extends Controller
         $data = $request->only(['title', 'type', 'description', 'location', 'year']);
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('activities', 'public');
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/activities'), $filename);
+            $data['image'] = 'activities/' . $filename;
         }
 
         Activity::create($data);
@@ -68,9 +71,15 @@ class ActivityController extends Controller
 
         if ($request->hasFile('image')) {
             if ($activity->image) {
-                Storage::disk('public')->delete($activity->image);
+                $oldPath = public_path('uploads/' . $activity->image);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
             }
-            $data['image'] = $request->file('image')->store('activities', 'public');
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/activities'), $filename);
+            $data['image'] = 'activities/' . $filename;
         }
 
         $activity->update($data);
@@ -82,7 +91,10 @@ class ActivityController extends Controller
     public function destroy(Activity $activity)
     {
         if ($activity->image) {
-            Storage::disk('public')->delete($activity->image);
+            $path = public_path('uploads/' . $activity->image);
+            if (file_exists($path)) {
+                unlink($path);
+            }
         }
         $activity->delete();
 

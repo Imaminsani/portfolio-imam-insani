@@ -34,7 +34,7 @@
             <td>
               <div style="display:flex;align-items:center;gap:0.75rem;">
                 @if($activity->image)
-                  <img src="{{ asset('storage/'.$activity->image) }}" class="project-thumb" alt="{{ $activity->title }}">
+                  <img src="{{ asset('uploads/'.$activity->image) }}" class="project-thumb" alt="{{ $activity->title }}">
                 @else
                   <div class="project-thumb-placeholder">📅</div>
                 @endif

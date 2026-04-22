@@ -82,7 +82,7 @@
         {{-- Image --}}
         <div class="about-image-wrap reveal">
           @if($about->profile_image)
-            <img src="{{ $about->profile_image == 'profile.png' ? asset('img/profile.png') : asset('storage/' . $about->profile_image) }}"
+            <img src="{{ $about->profile_image == 'profile.png' ? asset('img/profile.png') : asset('uploads/' . $about->profile_image) }}"
                  alt="{{ $about->name ?? 'Profile' }}">
           @else
             <div class="about-image-placeholder">👨‍💻</div>
@@ -131,7 +131,7 @@
           <div class="project-card-premium reveal">
             <div class="project-image-box">
               @if($project->image)
-                <img src="{{ asset('storage/' . $project->image) }}" alt="{{ $project->title }}">
+                <img src="{{ asset('uploads/' . $project->image) }}" alt="{{ $project->title }}">
               @else
                 <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg-card);font-size:3.5rem;">💻</div>
               @endif
@@ -174,7 +174,7 @@
           <div class="cert-card-premium reveal">
             <div class="cert-image-box">
               @if($cert->image)
-                <img src="{{ asset('storage/' . $cert->image) }}" alt="{{ $cert->title }}">
+                <img src="{{ asset('uploads/' . $cert->image) }}" alt="{{ $cert->title }}">
               @else
                 <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg-darker);font-size:3.5rem;">🎓</div>
               @endif
@@ -209,7 +209,7 @@
           <div class="activity-card reveal">
             <div class="activity-image-box">
               @if($activity->image)
-                <img src="{{ asset('storage/' . $activity->image) }}" alt="{{ $activity->title }}">
+                <img src="{{ asset('uploads/' . $activity->image) }}" alt="{{ $activity->title }}">
               @else
                 <div class="activity-image-placeholder">📅</div>
               @endif

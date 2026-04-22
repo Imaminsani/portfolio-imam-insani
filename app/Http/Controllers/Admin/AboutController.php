@@ -36,9 +36,15 @@ class AboutController extends Controller
         if ($request->hasFile('profile_image')) {
             // Delete old image if it exists and is not the default profile.png
             if ($about->profile_image && $about->profile_image !== 'profile.png') {
-                Storage::disk('public')->delete($about->profile_image);
+                $oldPath = public_path('uploads/' . $about->profile_image);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
             }
-            $data['profile_image'] = $request->file('profile_image')->store('profile', 'public');
+            $file = $request->file('profile_image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/profile'), $filename);
+            $data['profile_image'] = 'profile/' . $filename;
         }
 
         $about->fill($data)->save();

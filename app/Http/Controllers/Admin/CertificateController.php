@@ -33,7 +33,10 @@ class CertificateController extends Controller
         $data = $request->only(['title', 'issuer', 'year', 'link']);
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('certificates', 'public');
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/certificates'), $filename);
+            $data['image'] = 'certificates/' . $filename;
         }
 
         Certificate::create($data);
@@ -66,9 +69,15 @@ class CertificateController extends Controller
 
         if ($request->hasFile('image')) {
             if ($certificate->image) {
-                Storage::disk('public')->delete($certificate->image);
+                $oldPath = public_path('uploads/' . $certificate->image);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
             }
-            $data['image'] = $request->file('image')->store('certificates', 'public');
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/certificates'), $filename);
+            $data['image'] = 'certificates/' . $filename;
         }
 
         $certificate->update($data);
@@ -80,7 +89,10 @@ class CertificateController extends Controller
     public function destroy(Certificate $certificate)
     {
         if ($certificate->image) {
-            Storage::disk('public')->delete($certificate->image);
+            $path = public_path('uploads/' . $certificate->image);
+            if (file_exists($path)) {
+                unlink($path);
+            }
         }
         $certificate->delete();
 

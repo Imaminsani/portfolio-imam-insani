@@ -71,7 +71,7 @@
         <label class="form-label">Foto Kegiatan</label>
         @if($activity->image)
           <div style="margin-bottom:0.75rem;">
-            <img src="{{ asset('storage/'.$activity->image) }}"
+            <img src="{{ asset('uploads/'.$activity->image) }}"
               style="max-height:150px; border-radius:10px; border:1px solid var(--border);" alt="Current">
             <div class="form-hint" style="margin-top:0.4rem;">Foto saat ini. Upload baru untuk mengganti.</div>
           </div>
