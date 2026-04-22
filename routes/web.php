@@ -19,11 +19,21 @@ Route::get('/migrate-db-imam', function () {
 });
 
 Route::get('/storage-link-imam', function () {
+    $target = storage_path('app/public');
+    $link = public_path('storage');
+
+    if (file_exists($link)) {
+        return '<h2 style="font-family:sans-serif;padding:2rem;color:#f59e0b;">⚠️ Link sudah ada! Hapus folder "public/storage" dulu di File Manager jika foto tetap tidak muncul.</h2>';
+    }
+
     try {
-        \Illuminate\Support\Facades\Artisan::call('storage:link');
-        return '<h2 style="font-family:sans-serif;padding:2rem;color:#10b981;">✅ Storage link berhasil dibuat!</h2>';
-    } catch (\Exception $e) {
-        return '<h2 style="font-family:sans-serif;padding:2rem;color:#10b981;">✅ Storage link sudah ada.</h2>';
+        if (symlink($target, $link)) {
+            return '<h2 style="font-family:sans-serif;padding:2rem;color:#10b981;">✅ Storage link berhasil dibuat menggunakan symlink()!</h2>';
+        } else {
+            return '<h2 style="font-family:sans-serif;padding:2rem;color:#ef4444;">❌ Gagal membuat symlink.</h2>';
+        }
+    } catch (\Throwable $e) {
+        return '<h2 style="font-family:sans-serif;padding:2rem;color:#ef4444;">❌ Error: ' . $e->getMessage() . '</h2>';
     }
 });
 
