@@ -1,113 +1,48 @@
 @extends('layouts.admin')
 
-@section('title', 'Tambah Kegiatan')
-
-@section('actions')
-  <a href="{{ route('admin.activities.index') }}" class="btn-admin btn-admin-ghost">
-    <i class="fa-solid fa-arrow-left"></i> Kembali
-  </a>
-@endsection
+@section('title', 'Tambah Aktivitas Baru')
 
 @section('content')
-<div class="panel">
-  <div class="panel-header">
-    <div class="panel-title">
-      <i class="fa-solid fa-calendar-plus"></i>
-      Informasi Kegiatan
-    </div>
-  </div>
-  <div class="form-card">
-    <form action="{{ route('admin.activities.store') }}" method="POST" enctype="multipart/form-data">
-      @csrf
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label" for="title">
-            Nama Kegiatan <span class="required">*</span>
-          </label>
-          <input type="text" id="title" name="title"
-            class="form-input {{ $errors->has('title') ? 'is-invalid' : '' }}"
-            placeholder="Contoh: Seminar Nasional Teknologi 2024"
-            value="{{ old('title') }}" required>
-          @error('title')
-            <div class="invalid-feedback"><i class="fa-solid fa-circle-exclamation"></i> {{ $message }}</div>
-          @enderror
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="type">
-            Jenis Kegiatan <span class="required">*</span>
-          </label>
-          <select id="type" name="type" class="form-select {{ $errors->has('type') ? 'is-invalid' : '' }}" required>
-            <option value="" disabled selected>— Pilih Jenis —</option>
-            @foreach(['Seminar', 'Workshop', 'Lomba / Kompetisi', 'Organisasi', 'Konferensi', 'Pelatihan', 'Volunteer', 'Lainnya'] as $type)
-              <option value="{{ $type }}" {{ old('type') === $type ? 'selected' : '' }}>{{ $type }}</option>
-            @endforeach
-          </select>
-          @error('type')
-            <div class="invalid-feedback"><i class="fa-solid fa-circle-exclamation"></i> {{ $message }}</div>
-          @enderror
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="description">Deskripsi Kegiatan</label>
-        <textarea id="description" name="description" class="form-textarea"
-          placeholder="Ceritakan kegiatan ini: apa yang Anda lakukan, apa yang Anda pelajari...">{{ old('description') }}</textarea>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label" for="location">Lokasi</label>
-          <input type="text" id="location" name="location" class="form-input"
-            placeholder="Contoh: Jakarta, Online, Bandung..."
-            value="{{ old('location') }}">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="year">
-            Tahun <span class="required">*</span>
-          </label>
-          <input type="text" id="year" name="year"
-            class="form-input {{ $errors->has('year') ? 'is-invalid' : '' }}"
-            placeholder="{{ date('Y') }}" value="{{ old('year') }}" required>
-          @error('year')
-            <div class="invalid-feedback"><i class="fa-solid fa-circle-exclamation"></i> {{ $message }}</div>
-          @enderror
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="image">Foto Kegiatan</label>
-        <input type="file" id="image" name="image" class="form-input" accept="image/*" onchange="previewImage(this)">
-        <div class="form-hint"><i class="fa-regular fa-image"></i> Format JPG, PNG, atau WEBP. Maksimal 2MB.</div>
-        <img id="img-preview" class="img-preview" alt="Preview">
-        @error('image')
-          <div class="invalid-feedback"><i class="fa-solid fa-circle-exclamation"></i> {{ $message }}</div>
-        @enderror
-      </div>
-
-      <div class="form-footer" style="margin: 0 -1.75rem -1.75rem; border-radius: 0 0 var(--radius) var(--radius);">
-        <span style="font-size:0.8rem;color:var(--text-dim);">
-          <i class="fa-solid fa-circle-info"></i> Fields dengan * wajib diisi
-        </span>
-        <button type="submit" class="btn-admin btn-admin-primary" style="padding:0.7rem 1.75rem;">
-          <i class="fa-solid fa-floppy-disk"></i> Simpan Kegiatan
-        </button>
-      </div>
-    </form>
-  </div>
+<div class="mb-4">
+    <a href="{{ route('admin.activities.index') }}" class="text-muted text-decoration-none" style="font-size: 0.9rem;">
+        <i class="bi bi-arrow-left me-1"></i> Kembali ke Daftar
+    </a>
+    <h2 class="fw-bold mt-2">Tambah Aktivitas Baru</h2>
 </div>
 
-@push('scripts')
-<script>
-function previewImage(input) {
-  const preview = document.getElementById('img-preview');
-  if (input.files && input.files[0]) {
-    const reader = new FileReader();
-    reader.onload = (e) => { preview.src = e.target.result; preview.classList.add('show'); };
-    reader.readAsDataURL(input.files[0]);
-  }
-}
-</script>
-@endpush
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card-custom">
+            <form action="{{ route('admin.activities.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                
+                <div class="mb-3">
+                    <label for="title" class="form-label text-muted fw-semibold" style="font-size: 0.85rem; letter-spacing: 0.05em;">NAMA AKTIVITAS</label>
+                    <input type="text" name="title" id="title" class="form-control" value="{{ old('title') }}" placeholder="Contoh: Hackathon Nasional 2024" required>
+                    @error('title') <small class="text-danger">{{ $message }}</small> @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label text-muted fw-semibold" style="font-size: 0.85rem; letter-spacing: 0.05em;">DESKRIPSI (OPSIONAL)</label>
+                    <textarea name="description" id="description" rows="4" class="form-control" placeholder="Jelaskan peran Anda, pengalaman yang didapat, dll...">{{ old('description') }}</textarea>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="date" class="form-label text-muted fw-semibold" style="font-size: 0.85rem; letter-spacing: 0.05em;">TANGGAL PELAKSANAAN</label>
+                        <input type="date" name="date" id="date" class="form-control" value="{{ old('date') }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="image" class="form-label text-muted fw-semibold" style="font-size: 0.85rem; letter-spacing: 0.05em;">GAMBAR DOKUMENTASI (OPSIONAL)</label>
+                        <input type="file" name="image" id="image" class="form-control">
+                    </div>
+                </div>
+
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn-custom py-2 px-5">Simpan Aktivitas</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection

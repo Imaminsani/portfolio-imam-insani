@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
@@ -24,36 +23,21 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title'       => 'required|string|max:255',
-            'description' => 'required|string',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'link'        => 'nullable|url|max:255',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'link' => 'nullable|url',
         ]);
 
-        $data = [
-            'title'       => $request->title,
-            'slug'        => Str::slug($request->title),
-            'description' => $request->description,
-            'link'        => $request->link,
-            'is_featured' => $request->boolean('is_featured'),
-        ];
+        $data = $request->all();
 
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/projects'), $filename);
-            $data['image'] = 'projects/' . $filename;
+            $data['image'] = $request->file('image')->store('projects', 'uploads');
         }
 
         Project::create($data);
 
-        return redirect()->route('admin.projects.index')
-            ->with('success', 'Project berhasil ditambahkan! 🎉');
-    }
-
-    public function show(Project $project)
-    {
-        return redirect()->route('admin.projects.edit', $project);
+        return redirect()->route('admin.projects.index')->with('success', 'Proyek berhasil ditambahkan.');
     }
 
     public function edit(Project $project)
@@ -64,51 +48,33 @@ class ProjectController extends Controller
     public function update(Request $request, Project $project)
     {
         $request->validate([
-            'title'       => 'required|string|max:255',
-            'description' => 'required|string',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'link'        => 'nullable|url|max:255',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'link' => 'nullable|url',
         ]);
 
-        $data = [
-            'title'       => $request->title,
-            'slug'        => Str::slug($request->title),
-            'description' => $request->description,
-            'link'        => $request->link,
-            'is_featured' => $request->boolean('is_featured'),
-        ];
+        $data = $request->all();
 
         if ($request->hasFile('image')) {
-            // Hapus gambar lama jika ada
             if ($project->image) {
-                $oldPath = public_path('uploads/' . $project->image);
-                if (file_exists($oldPath)) {
-                    unlink($oldPath);
-                }
+                Storage::disk('uploads')->delete($project->image);
             }
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/projects'), $filename);
-            $data['image'] = 'projects/' . $filename;
+            $data['image'] = $request->file('image')->store('projects', 'uploads');
         }
 
         $project->update($data);
 
-        return redirect()->route('admin.projects.index')
-            ->with('success', 'Project berhasil diperbarui! ✅');
+        return redirect()->route('admin.projects.index')->with('success', 'Proyek berhasil diperbarui.');
     }
 
     public function destroy(Project $project)
     {
         if ($project->image) {
-            $path = public_path('uploads/' . $project->image);
-            if (file_exists($path)) {
-                unlink($path);
-            }
+            Storage::disk('uploads')->delete($project->image);
         }
         $project->delete();
 
-        return redirect()->route('admin.projects.index')
-            ->with('success', 'Project berhasil dihapus.');
+        return redirect()->route('admin.projects.index')->with('success', 'Proyek berhasil dihapus.');
     }
 }

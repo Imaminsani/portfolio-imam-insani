@@ -23,32 +23,21 @@ class ActivityController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title'       => 'required|string|max:255',
-            'type'        => 'required|string|max:100',
+            'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'location'    => 'nullable|string|max:255',
-            'year'        => 'required|string|max:10',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'date' => 'nullable|date',
         ]);
 
-        $data = $request->only(['title', 'type', 'description', 'location', 'year']);
+        $data = $request->all();
 
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/activities'), $filename);
-            $data['image'] = 'activities/' . $filename;
+            $data['image'] = $request->file('image')->store('activities', 'uploads');
         }
 
         Activity::create($data);
 
-        return redirect()->route('admin.activities.index')
-            ->with('success', 'Kegiatan berhasil ditambahkan! 🎉');
-    }
-
-    public function show(Activity $activity)
-    {
-        return redirect()->route('admin.activities.edit', $activity);
+        return redirect()->route('admin.activities.index')->with('success', 'Aktivitas berhasil ditambahkan.');
     }
 
     public function edit(Activity $activity)
@@ -59,46 +48,33 @@ class ActivityController extends Controller
     public function update(Request $request, Activity $activity)
     {
         $request->validate([
-            'title'       => 'required|string|max:255',
-            'type'        => 'required|string|max:100',
+            'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'location'    => 'nullable|string|max:255',
-            'year'        => 'required|string|max:10',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'date' => 'nullable|date',
         ]);
 
-        $data = $request->only(['title', 'type', 'description', 'location', 'year']);
+        $data = $request->all();
 
         if ($request->hasFile('image')) {
             if ($activity->image) {
-                $oldPath = public_path('uploads/' . $activity->image);
-                if (file_exists($oldPath)) {
-                    unlink($oldPath);
-                }
+                Storage::disk('uploads')->delete($activity->image);
             }
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/activities'), $filename);
-            $data['image'] = 'activities/' . $filename;
+            $data['image'] = $request->file('image')->store('activities', 'uploads');
         }
 
         $activity->update($data);
 
-        return redirect()->route('admin.activities.index')
-            ->with('success', 'Kegiatan berhasil diperbarui! ✅');
+        return redirect()->route('admin.activities.index')->with('success', 'Aktivitas berhasil diperbarui.');
     }
 
     public function destroy(Activity $activity)
     {
         if ($activity->image) {
-            $path = public_path('uploads/' . $activity->image);
-            if (file_exists($path)) {
-                unlink($path);
-            }
+            Storage::disk('uploads')->delete($activity->image);
         }
         $activity->delete();
 
-        return redirect()->route('admin.activities.index')
-            ->with('success', 'Kegiatan berhasil dihapus.');
+        return redirect()->route('admin.activities.index')->with('success', 'Aktivitas berhasil dihapus.');
     }
 }

@@ -3,17 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Certificate extends Model
 {
-    use HasFactory;
-
-    protected $fillable = [
-        'title',
-        'issuer',
-        'year',
-        'image',
-        'link',
-    ];
+    protected $fillable = ['title', 'issued_by', 'image', 'issue_date'];
 }

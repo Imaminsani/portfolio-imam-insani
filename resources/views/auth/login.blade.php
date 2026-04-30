@@ -1,284 +1,259 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Login — Portfolio Imam</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #030712;
-      color: #f8fafc;
-      min-height: 100vh;
-      display: flex;
-      overflow: hidden;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Portfolio Admin</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-bg: #09090b;
+            --card-bg: #18181b;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #27272a;
+        }
+        
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-    /* Left Panel */
-    .left-panel {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 4rem;
-      background:
-        radial-gradient(ellipse at 30% 50%, rgba(99,102,241,0.15) 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 80%, rgba(6,182,212,0.08) 0%, transparent 50%),
-        #030712;
-      position: relative;
-      overflow: hidden;
-    }
+        /* Ambient Glow Background Effect */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, rgba(9,9,11,0) 70%);
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+        }
 
-    .left-panel::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-      pointer-events: none;
-    }
+        body::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            right: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, rgba(9,9,11,0) 70%);
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+        }
 
-    .panel-logo {
-      display: flex; align-items: center; gap: 0.75rem;
-      font-size: 1.5rem; font-weight: 800;
-      margin-bottom: 4rem; position: relative; z-index: 1;
-    }
-    .panel-logo-icon {
-      width: 44px; height: 44px;
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem;
-    }
+        .login-wrapper {
+            width: 100%;
+            max-width: 420px;
+            padding: 2rem;
+            z-index: 1;
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
 
-    .panel-heading {
-      position: relative; z-index: 1;
-      max-width: 420px;
-    }
-    .panel-heading .tag {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      padding: 0.3rem 0.8rem;
-      background: rgba(99,102,241,0.15);
-      border: 1px solid rgba(99,102,241,0.3);
-      border-radius: 99px;
-      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em;
-      text-transform: uppercase; color: #818cf8;
-      margin-bottom: 1.5rem;
-    }
-    .panel-heading h1 {
-      font-size: 3rem; font-weight: 900; line-height: 1.15;
-      letter-spacing: -0.03em; margin-bottom: 1.25rem;
-    }
-    .panel-heading h1 span {
-      background: linear-gradient(135deg, #818cf8, #06b6d4);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .panel-heading p {
-      color: #64748b; font-size: 1rem; line-height: 1.7;
-    }
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    /* Code Card */
-    .code-card {
-      position: absolute; bottom: 2.5rem; right: 2.5rem;
-      background: #0a0f1e;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px; padding: 1.25rem 1.5rem;
-      font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
-      color: #64748b; z-index: 1;
-      box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
-      min-width: 260px;
-    }
-    .code-card .kw { color: #c084fc; }
-    .code-card .fn { color: #60a5fa; }
-    .code-card .st { color: #34d399; }
-    .code-card .cm { color: #475569; }
-    .code-line { margin-bottom: 3px; }
+        .login-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
 
-    /* Right Panel (Form) */
-    .right-panel {
-      width: 480px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background: #0a0f1e;
-      border-left: 1px solid rgba(255,255,255,0.06);
-      padding: 3rem 3rem;
-    }
+        .logo-container {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent-color), #8b5cf6);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.3);
+        }
 
-    .form-box { width: 100%; max-width: 360px; }
+        .logo-container svg {
+            color: white;
+            width: 32px;
+            height: 32px;
+        }
 
-    .form-title {
-      font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em;
-      margin-bottom: 0.5rem;
-    }
-    .form-subtitle { color: #475569; font-size: 0.9rem; margin-bottom: 2.5rem; }
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
 
-    .form-group { margin-bottom: 1.25rem; }
-    .form-label {
-      display: block; font-size: 0.82rem; font-weight: 600;
-      color: #94a3b8; margin-bottom: 0.5rem;
-    }
-    .form-input {
-      width: 100%;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 0.8rem 1rem;
-      color: #f8fafc;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.9rem;
-      transition: all 0.2s;
-      outline: none;
-    }
-    .form-input:focus {
-      border-color: #6366f1;
-      background: rgba(99,102,241,0.05);
-      box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
-    }
-    .form-input::placeholder { color: #334155; }
+        .login-header h2 {
+            font-weight: 600;
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
 
-    .form-options {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 1.75rem;
-    }
-    .form-check { display: flex; align-items: center; gap: 0.5rem; }
-    .form-check input[type="checkbox"] { accent-color: #6366f1; }
-    .form-check label { font-size: 0.82rem; color: #64748b; cursor: pointer; }
-    .form-forgot { font-size: 0.82rem; color: #6366f1; text-decoration: none; }
-    .form-forgot:hover { color: #818cf8; }
+        .login-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
 
-    .btn-login {
-      width: 100%;
-      padding: 0.9rem;
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
-      border: none; border-radius: 10px;
-      color: white; font-family: 'Inter', sans-serif;
-      font-size: 0.95rem; font-weight: 700;
-      cursor: pointer; transition: all 0.2s;
-      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-      box-shadow: 0 0 25px rgba(99,102,241,0.3);
-    }
-    .btn-login:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 40px rgba(99,102,241,0.4);
-    }
-    .btn-login:active { transform: translateY(0); }
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
 
-    .form-back {
-      display: flex; align-items: center; gap: 0.5rem;
-      margin-bottom: 2rem;
-      color: #475569; font-size: 0.82rem; text-decoration: none;
-      transition: color 0.2s;
-    }
-    .form-back:hover { color: #94a3b8; }
+        .form-control:focus {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent-color);
+            color: var(--text-main);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
 
-    /* Error */
-    .error-box {
-      background: rgba(239,68,68,0.1);
-      border: 1px solid rgba(239,68,68,0.3);
-      border-radius: 8px; padding: 0.75rem 1rem;
-      margin-bottom: 1.25rem;
-      color: #fca5a5; font-size: 0.83rem;
-      display: flex; align-items: center; gap: 0.5rem;
-    }
+        .form-control::placeholder {
+            color: #52525b;
+        }
 
-    @media (max-width: 900px) {
-      body { flex-direction: column; }
-      .left-panel { display: none; }
-      .right-panel { width: 100%; flex: 1; }
-    }
-  </style>
+        .form-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-login {
+            background: linear-gradient(to right, var(--accent-color), #60a5fa);
+            border: none;
+            color: white;
+            border-radius: 12px;
+            padding: 0.85rem;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.025em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.23);
+            color: white;
+            background: linear-gradient(to right, var(--accent-hover), #3b82f6);
+        }
+
+        .btn-login:active {
+            transform: translateY(1px);
+        }
+
+        .form-check-input {
+            background-color: transparent;
+            border-color: var(--border-color);
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .form-check-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .alert-error {
+            background-color: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            padding: 1rem;
+        }
+    </style>
 </head>
 <body>
 
-  {{-- Left Brand Panel --}}
-  <div class="left-panel">
-    <div class="panel-logo">
-      <div class="panel-logo-icon">I</div>
-      Portfolio Imam
+    <div class="login-wrapper">
+        <div class="login-card">
+            
+            <div class="logo-container">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                </svg>
+            </div>
+
+            <div class="login-header">
+                <h2>Welcome Back</h2>
+                <p>Login ke dashboard admin portofolio Anda.</p>
+            </div>
+
+            @if ($errors->any())
+                <div class="alert alert-error mb-4">
+                    <div class="d-flex align-items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-exclamation-triangle-fill me-2" viewBox="0 0 16 16">
+                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                        </svg>
+                        <span>{{ $errors->first() }}</span>
+                    </div>
+                </div>
+            @endif
+
+            <form action="{{ route('login') }}" method="POST">
+                @csrf
+                <div class="mb-4">
+                    <label for="email" class="form-label">Alamat Email</label>
+                    <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" placeholder="admin@portfolio.com" required autofocus autocomplete="email">
+                </div>
+
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <label for="password" class="form-label mb-0">Password</label>
+                    </div>
+                    <input type="password" name="password" id="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+                </div>
+
+                <div class="mb-4 form-check">
+                    <input type="checkbox" name="remember" class="form-check-input" id="remember">
+                    <label class="form-check-label" for="remember">Ingat Saya</label>
+                </div>
+
+                <button type="submit" class="btn btn-login w-100">
+                    Masuk ke Dashboard
+                </button>
+            </form>
+        </div>
     </div>
 
-    <div class="panel-heading">
-      <div class="tag">
-        <i class="fa-solid fa-shield-halved"></i> Secure Admin
-      </div>
-      <h1>Kelola Portfolio<br>Anda dengan <span>Mudah</span></h1>
-      <p>Tambah project, upload foto, dan update konten portfolio Anda tanpa menyentuh kode sama sekali.</p>
-    </div>
-
-    <div class="code-card">
-      <div class="code-line"><span class="kw">class</span> Admin <span style="color:#fbbf24">{</span></div>
-      <div class="code-line">&nbsp;&nbsp;<span class="fn">login</span>(<span class="st">'admin@portfolio.com'</span>)</div>
-      <div class="code-line">&nbsp;&nbsp;<span class="cm">// Manage your content</span></div>
-      <div class="code-line">&nbsp;&nbsp;<span class="fn">addProject</span>(<span class="st">$data</span>)</div>
-      <div class="code-line"><span style="color:#fbbf24">}</span></div>
-    </div>
-  </div>
-
-  {{-- Right Login Form --}}
-  <div class="right-panel">
-    <div class="form-box">
-      <a href="/" class="form-back">
-        <i class="fa-solid fa-arrow-left"></i> Kembali ke Portfolio
-      </a>
-
-      <h2 class="form-title">Selamat Datang 👋</h2>
-      <p class="form-subtitle">Login untuk mengelola portfolio Anda</p>
-
-      {{-- Session Status --}}
-      @if (session('status'))
-        <div class="error-box" style="background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.3);color:#6ee7b7;">
-          <i class="fa-solid fa-circle-check"></i> {{ session('status') }}
-        </div>
-      @endif
-
-      <form method="POST" action="{{ route('login') }}">
-        @csrf
-
-        {{-- Errors --}}
-        @if ($errors->any())
-          <div class="error-box">
-            <i class="fa-solid fa-circle-exclamation"></i>
-            {{ $errors->first() }}
-          </div>
-        @endif
-
-        <div class="form-group">
-          <label class="form-label" for="email">Email Address</label>
-          <input id="email" type="email" name="email" class="form-input"
-            placeholder="admin@portfolio.com"
-            value="{{ old('email') }}" required autofocus>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="password">Password</label>
-          <input id="password" type="password" name="password" class="form-input"
-            placeholder="••••••••" required>
-        </div>
-
-        <div class="form-options">
-          <div class="form-check">
-            <input type="checkbox" id="remember" name="remember">
-            <label for="remember">Ingat saya</label>
-          </div>
-          @if (Route::has('password.request'))
-            <a href="{{ route('password.request') }}" class="form-forgot">Lupa password?</a>
-          @endif
-        </div>
-
-        <button type="submit" class="btn-login">
-          <i class="fa-solid fa-right-to-bracket"></i> Masuk ke Dashboard
-        </button>
-      </form>
-    </div>
-  </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

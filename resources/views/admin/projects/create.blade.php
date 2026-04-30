@@ -1,111 +1,49 @@
 @extends('layouts.admin')
 
-@section('title', 'Tambah Project Baru')
-
-@section('actions')
-  <a href="{{ route('admin.projects.index') }}" class="btn-admin btn-admin-ghost">
-    <i class="fa-solid fa-arrow-left"></i> Kembali
-  </a>
-@endsection
+@section('title', 'Tambah Proyek Baru')
 
 @section('content')
-<div class="panel">
-  <div class="panel-header">
-    <div class="panel-title">
-      <i class="fa-solid fa-laptop-code"></i>
-      Informasi Project
-    </div>
-  </div>
-  <div class="form-card">
-    <form action="{{ route('admin.projects.store') }}" method="POST" enctype="multipart/form-data">
-      @csrf
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label" for="title">
-            Judul Project <span class="required">*</span>
-          </label>
-          <input type="text" id="title" name="title" class="form-input {{ $errors->has('title') ? 'is-invalid' : '' }}"
-            placeholder="Contoh: Aplikasi Kasir UMKM"
-            value="{{ old('title') }}" required>
-          @error('title')
-            <div class="invalid-feedback"><i class="fa-solid fa-circle-exclamation"></i> {{ $message }}</div>
-          @enderror
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="link">Link Demo / GitHub</label>
-          <input type="url" id="link" name="link" class="form-input {{ $errors->has('link') ? 'is-invalid' : '' }}"
-            placeholder="https://github.com/username/repo"
-            value="{{ old('link') }}">
-          <div class="form-hint">Opsional — link ke halaman live atau repositori.</div>
-          @error('link')
-            <div class="invalid-feedback"><i class="fa-solid fa-circle-exclamation"></i> {{ $message }}</div>
-          @enderror
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="description">
-          Deskripsi Project <span class="required">*</span>
-        </label>
-        <textarea id="description" name="description"
-          class="form-textarea {{ $errors->has('description') ? 'is-invalid' : '' }}"
-          placeholder="Ceritakan project ini: apa fungsinya, teknologi yang digunakan, dan hasil yang dicapai..."
-          required>{{ old('description') }}</textarea>
-        @error('description')
-          <div class="invalid-feedback"><i class="fa-solid fa-circle-exclamation"></i> {{ $message }}</div>
-        @enderror
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="image">Gambar / Screenshot Project</label>
-        <input type="file" id="image" name="image"
-          class="form-input {{ $errors->has('image') ? 'is-invalid' : '' }}"
-          accept="image/*" onchange="previewImage(this)">
-        <div class="form-hint"><i class="fa-regular fa-image"></i> Format JPG, PNG, atau WEBP. Maksimal 2MB. Disarankan rasio 16:9.</div>
-        <img id="img-preview" class="img-preview" alt="Preview">
-        @error('image')
-          <div class="invalid-feedback"><i class="fa-solid fa-circle-exclamation"></i> {{ $message }}</div>
-        @enderror
-      </div>
-
-      <div class="form-group">
-        <div class="form-check-row">
-          <input type="checkbox" id="is_featured" name="is_featured" value="1"
-            {{ old('is_featured') ? 'checked' : '' }}>
-          <label for="is_featured">
-            <i class="fa-solid fa-star" style="color:var(--accent-amber);"></i>
-            Jadikan sebagai <strong>Featured Project</strong> — akan tampil menonjol di portfolio
-          </label>
-        </div>
-      </div>
-
-      <div class="form-footer" style="margin: 0 -1.75rem -1.75rem; border-radius: 0 0 var(--radius) var(--radius);">
-        <span style="font-size:0.8rem;color:var(--text-dim);">
-          <i class="fa-solid fa-circle-info"></i> Fields dengan * wajib diisi
-        </span>
-        <button type="submit" class="btn-admin btn-admin-primary" style="padding:0.7rem 1.75rem;">
-          <i class="fa-solid fa-floppy-disk"></i> Simpan Project
-        </button>
-      </div>
-    </form>
-  </div>
+<div class="mb-4">
+    <a href="{{ route('admin.projects.index') }}" class="text-muted text-decoration-none" style="font-size: 0.9rem;">
+        <i class="bi bi-arrow-left me-1"></i> Kembali ke Daftar
+    </a>
+    <h2 class="fw-bold mt-2">Tambah Proyek Baru</h2>
 </div>
 
-@push('scripts')
-<script>
-function previewImage(input) {
-  const preview = document.getElementById('img-preview');
-  if (input.files && input.files[0]) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      preview.src = e.target.result;
-      preview.classList.add('show');
-    };
-    reader.readAsDataURL(input.files[0]);
-  }
-}
-</script>
-@endpush
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card-custom">
+            <form action="{{ route('admin.projects.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                
+                <div class="mb-3">
+                    <label for="title" class="form-label text-muted fw-semibold" style="font-size: 0.85rem; letter-spacing: 0.05em;">JUDUL PROYEK</label>
+                    <input type="text" name="title" id="title" class="form-control" value="{{ old('title') }}" placeholder="Contoh: Website E-Commerce Laravel" required>
+                    @error('title') <small class="text-danger">{{ $message }}</small> @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label text-muted fw-semibold" style="font-size: 0.85rem; letter-spacing: 0.05em;">DESKRIPSI (OPSIONAL)</label>
+                    <textarea name="description" id="description" rows="4" class="form-control" placeholder="Jelaskan secara singkat tentang proyek ini, teknologi yang digunakan, dll...">{{ old('description') }}</textarea>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="link" class="form-label text-muted fw-semibold" style="font-size: 0.85rem; letter-spacing: 0.05em;">LINK PROYEK (OPSIONAL)</label>
+                        <input type="url" name="link" id="link" class="form-control" value="{{ old('link') }}" placeholder="https://domain.com">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="image" class="form-label text-muted fw-semibold" style="font-size: 0.85rem; letter-spacing: 0.05em;">GAMBAR PREVIEW</label>
+                        <input type="file" name="image" id="image" class="form-control">
+                        <small class="text-muted">Rekomendasi: 16:9 ratio, maks 2MB.</small>
+                    </div>
+                </div>
+
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn-custom py-2 px-5">Simpan Proyek</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection

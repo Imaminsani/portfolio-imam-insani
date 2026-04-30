@@ -1,43 +1,31 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\ProjectController;
+use App\Http\Controllers\Admin\CertificateController;
+use App\Http\Controllers\Admin\ActivityController;
+use App\Http\Controllers\Admin\ProfileController;
 
-// ─── PUBLIC PORTFOLIO ───────────────────────────────────
-Route::get('/', function () {
-    $about         = \App\Models\About::first() ?? new \App\Models\About();
-    $projects      = \App\Models\Project::latest()->get();
-    $certificates  = \App\Models\Certificate::latest()->get();
-    $activities    = \App\Models\Activity::latest()->get();
-    return view('index', compact('about', 'projects', 'certificates', 'activities'));
-});
+// Public Page
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// Auth Routes
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// ─── ADMIN PANEL ────────────────────────────────────────
-Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+// Admin Protected Routes
+Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        return view('admin.dashboard');
     })->name('dashboard');
 
-    Route::resource('projects',     \App\Http\Controllers\Admin\ProjectController::class);
-    Route::resource('certificates', \App\Http\Controllers\Admin\CertificateController::class);
-    Route::resource('activities',   \App\Http\Controllers\Admin\ActivityController::class);
+    Route::resource('projects', ProjectController::class);
+    Route::resource('certificates', CertificateController::class);
+    Route::resource('activities', ActivityController::class);
     
-    // About / Bio Management
-    Route::get('/about', [\App\Http\Controllers\Admin\AboutController::class, 'edit'])->name('about.edit');
-    Route::patch('/about', [\App\Http\Controllers\Admin\AboutController::class, 'update'])->name('about.update');
+    Route::get('profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::post('profile', [ProfileController::class, 'update'])->name('profile.update');
 });
-
-// Redirect /dashboard → /admin/dashboard
-Route::get('/dashboard', function () {
-    return redirect()->route('admin.dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-// ─── PROFILE ────────────────────────────────────────────
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-require __DIR__.'/auth.php';

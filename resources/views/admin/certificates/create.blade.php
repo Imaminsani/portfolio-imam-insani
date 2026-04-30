@@ -1,106 +1,49 @@
 @extends('layouts.admin')
 
-@section('title', 'Tambah Sertifikat')
-
-@section('actions')
-  <a href="{{ route('admin.certificates.index') }}" class="btn-admin btn-admin-ghost">
-    <i class="fa-solid fa-arrow-left"></i> Kembali
-  </a>
-@endsection
+@section('title', 'Tambah Sertifikat Baru')
 
 @section('content')
-<div class="panel">
-  <div class="panel-header">
-    <div class="panel-title">
-      <i class="fa-solid fa-award"></i>
-      Informasi Sertifikat
-    </div>
-  </div>
-  <div class="form-card">
-    <form action="{{ route('admin.certificates.store') }}" method="POST" enctype="multipart/form-data">
-      @csrf
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label" for="title">
-            Nama Sertifikat <span class="required">*</span>
-          </label>
-          <input type="text" id="title" name="title"
-            class="form-input {{ $errors->has('title') ? 'is-invalid' : '' }}"
-            placeholder="Contoh: Google IT Support Professional Certificate"
-            value="{{ old('title') }}" required>
-          @error('title')
-            <div class="invalid-feedback"><i class="fa-solid fa-circle-exclamation"></i> {{ $message }}</div>
-          @enderror
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="issuer">
-            Diterbitkan Oleh <span class="required">*</span>
-          </label>
-          <input type="text" id="issuer" name="issuer"
-            class="form-input {{ $errors->has('issuer') ? 'is-invalid' : '' }}"
-            placeholder="Contoh: Google, Dicoding, Coursera..."
-            value="{{ old('issuer') }}" required>
-          @error('issuer')
-            <div class="invalid-feedback"><i class="fa-solid fa-circle-exclamation"></i> {{ $message }}</div>
-          @enderror
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label" for="year">
-            Tahun Diperoleh <span class="required">*</span>
-          </label>
-          <input type="text" id="year" name="year"
-            class="form-input {{ $errors->has('year') ? 'is-invalid' : '' }}"
-            placeholder="{{ date('Y') }}" value="{{ old('year') }}" required>
-          @error('year')
-            <div class="invalid-feedback"><i class="fa-solid fa-circle-exclamation"></i> {{ $message }}</div>
-          @enderror
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="link">Link Verifikasi</label>
-          <input type="url" id="link" name="link" class="form-input"
-            placeholder="https://..." value="{{ old('link') }}">
-          <div class="form-hint">Opsional — link untuk memverifikasi keaslian sertifikat.</div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="image">Foto / Scan Sertifikat</label>
-        <input type="file" id="image" name="image" class="form-input" accept="image/*" onchange="previewImage(this)">
-        <div class="form-hint"><i class="fa-regular fa-image"></i> Format JPG, PNG, atau WEBP. Maksimal 2MB.</div>
-        <img id="img-preview" class="img-preview" alt="Preview">
-        @error('image')
-          <div class="invalid-feedback"><i class="fa-solid fa-circle-exclamation"></i> {{ $message }}</div>
-        @enderror
-      </div>
-
-      <div class="form-footer" style="margin: 0 -1.75rem -1.75rem; border-radius: 0 0 var(--radius) var(--radius);">
-        <span style="font-size:0.8rem;color:var(--text-dim);">
-          <i class="fa-solid fa-circle-info"></i> Fields dengan * wajib diisi
-        </span>
-        <button type="submit" class="btn-admin btn-admin-primary" style="padding:0.7rem 1.75rem;">
-          <i class="fa-solid fa-floppy-disk"></i> Simpan Sertifikat
-        </button>
-      </div>
-    </form>
-  </div>
+<div class="mb-4">
+    <a href="{{ route('admin.certificates.index') }}" class="text-muted text-decoration-none" style="font-size: 0.9rem;">
+        <i class="bi bi-arrow-left me-1"></i> Kembali ke Daftar
+    </a>
+    <h2 class="fw-bold mt-2">Tambah Sertifikat Baru</h2>
 </div>
 
-@push('scripts')
-<script>
-function previewImage(input) {
-  const preview = document.getElementById('img-preview');
-  if (input.files && input.files[0]) {
-    const reader = new FileReader();
-    reader.onload = (e) => { preview.src = e.target.result; preview.classList.add('show'); };
-    reader.readAsDataURL(input.files[0]);
-  }
-}
-</script>
-@endpush
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card-custom">
+            <form action="{{ route('admin.certificates.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                
+                <div class="mb-3">
+                    <label for="title" class="form-label text-muted fw-semibold" style="font-size: 0.85rem; letter-spacing: 0.05em;">JUDUL SERTIFIKAT</label>
+                    <input type="text" name="title" id="title" class="form-control" value="{{ old('title') }}" placeholder="Contoh: Cisco Certified Network Associate" required>
+                    @error('title') <small class="text-danger">{{ $message }}</small> @enderror
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="issued_by" class="form-label text-muted fw-semibold" style="font-size: 0.85rem; letter-spacing: 0.05em;">PENERBIT / ORGANISASI</label>
+                        <input type="text" name="issued_by" id="issued_by" class="form-control" value="{{ old('issued_by') }}" placeholder="Contoh: Cisco, Udemy, Google">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="issue_date" class="form-label text-muted fw-semibold" style="font-size: 0.85rem; letter-spacing: 0.05em;">TANGGAL TERBIT</label>
+                        <input type="date" name="issue_date" id="issue_date" class="form-control" value="{{ old('issue_date') }}">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="image" class="form-label text-muted fw-semibold" style="font-size: 0.85rem; letter-spacing: 0.05em;">GAMBAR/FILE SERTIFIKAT</label>
+                    <input type="file" name="image" id="image" class="form-control">
+                    <small class="text-muted">Maks 2MB (JPG/PNG).</small>
+                </div>
+
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn-custom py-2 px-5">Simpan Sertifikat</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection

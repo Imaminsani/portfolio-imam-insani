@@ -1,84 +1,69 @@
 @extends('layouts.admin')
 
-@section('title', 'Kegiatan & Event')
-
-@section('actions')
-  <a href="{{ route('admin.activities.create') }}" class="btn-admin btn-admin-primary">
-    <i class="fa-solid fa-plus"></i> Tambah Kegiatan
-  </a>
-@endsection
+@section('title', 'Daftar Aktivitas')
 
 @section('content')
-<div class="panel">
-  <div class="panel-header">
-    <div class="panel-title">
-      <i class="fa-solid fa-calendar-star"></i>
-      Daftar Kegiatan & Event
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold m-0">Manajemen Aktivitas</h2>
+        <p class="text-muted m-0">Catatan kegiatan, pengalaman, atau event yang Anda ikuti.</p>
     </div>
-    <span style="font-size:0.8rem;color:var(--text-dim);">{{ $activities->count() }} kegiatan</span>
-  </div>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Kegiatan</th>
-          <th>Jenis</th>
-          <th>Lokasi</th>
-          <th>Tahun</th>
-          <th style="text-align:right">Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        @forelse ($activities as $activity)
-          <tr>
-            <td>
-              <div style="display:flex;align-items:center;gap:0.75rem;">
-                @if($activity->image)
-                  <img src="{{ asset('uploads/'.$activity->image) }}" class="project-thumb" alt="{{ $activity->title }}">
-                @else
-                  <div class="project-thumb-placeholder">📅</div>
-                @endif
-                <span style="font-weight:600;color:var(--text);">{{ $activity->title }}</span>
-              </div>
-            </td>
-            <td>
-              <span class="table-badge" style="background:rgba(6,182,212,0.1);color:#22d3ee;border:1px solid rgba(6,182,212,0.2);">
-                {{ $activity->type }}
-              </span>
-            </td>
-            <td style="font-size:0.83rem;color:var(--text-muted);">{{ $activity->location ?? '—' }}</td>
-            <td>
-              <span class="table-badge" style="background:rgba(99,102,241,0.1);color:var(--accent-hover);border:1px solid rgba(99,102,241,0.2);">
-                {{ $activity->year }}
-              </span>
-            </td>
-            <td>
-              <div class="td-actions">
-                <a href="{{ route('admin.activities.edit', $activity) }}" class="btn-admin btn-admin-ghost">
-                  <i class="fa-solid fa-pen"></i> Edit
-                </a>
-                <form action="{{ route('admin.activities.destroy', $activity) }}" method="POST"
-                      onsubmit="return confirm('Hapus kegiatan \'{{ addslashes($activity->title) }}\'?')">
-                  @csrf @method('DELETE')
-                  <button type="submit" class="btn-admin btn-admin-danger" title="Hapus">
-                    <i class="fa-solid fa-trash"></i>
-                  </button>
-                </form>
-              </div>
-            </td>
-          </tr>
-        @empty
-          <tr>
-            <td colspan="5">
-              <div class="empty-state">
-                <i class="fa-solid fa-calendar-days"></i>
-                <p>Belum ada kegiatan. <a href="{{ route('admin.activities.create') }}" style="color:var(--accent)">Tambah sekarang →</a></p>
-              </div>
-            </td>
-          </tr>
-        @endforelse
-      </tbody>
-    </table>
-  </div>
+    <a href="{{ route('admin.activities.create') }}" class="btn-custom py-2 px-4 shadow-sm text-decoration-none">
+        <i class="bi bi-plus-lg me-1"></i> Tambah Aktivitas
+    </a>
+</div>
+
+<div class="card-custom">
+    <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle mb-0">
+            <thead class="text-muted text-uppercase" style="font-size: 0.8rem; border-bottom: 1px solid var(--border-color);">
+                <tr>
+                    <th class="ps-3 py-3">Aktivitas</th>
+                    <th class="py-3">Deskripsi</th>
+                    <th class="py-3">Tanggal</th>
+                    <th class="text-end pe-3 py-3">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($activities as $activity)
+                <tr>
+                    <td class="ps-3 py-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="bi bi-calendar-check text-warning h4 mb-0"></i>
+                            <span class="fw-semibold">{{ $activity->title }}</span>
+                        </div>
+                    </td>
+                    <td class="py-4">
+                        <span class="text-muted text-truncate d-inline-block" style="max-width: 300px;">{{ $activity->description }}</span>
+                    </td>
+                    <td class="py-4 text-muted">
+                        {{ $activity->date ? \Carbon\Carbon::parse($activity->date)->format('d M Y') : '-' }}
+                    </td>
+                    <td class="text-end pe-3 py-4">
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{{ route('admin.activities.edit', $activity) }}" class="btn btn-sm btn-outline-primary border-0">
+                                <i class="bi bi-pencil-square" style="font-size: 1.1rem;"></i>
+                            </a>
+                            <form action="{{ route('admin.activities.destroy', $activity) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus aktivitas ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-outline-danger border-0">
+                                    <i class="bi bi-trash3" style="font-size: 1.1rem;"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="4" class="text-center py-5 text-muted">
+                        <i class="bi bi-calendar-x d-block h1 mb-3 opacity-25"></i>
+                        Belum ada aktivitas yang ditambahkan.
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>
 @endsection
